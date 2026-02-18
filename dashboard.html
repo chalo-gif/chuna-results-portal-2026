@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  /* =========================
+     GENERAL STYLES
+  ========================= */
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  header h1 { margin-bottom: 5px; }
+  header p { margin-top: 0; color: #555; }
+  section { margin-bottom: 30px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; background: #f9f9f9; }
+  h2 { margin-top: 0; color: #007BFF; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+  th { background-color: #007BFF; color: white; }
+
+  input, select, button { padding: 8px 12px; margin: 5px 0; font-size: 1rem; border-radius: 5px; }
+  button { cursor: pointer; background-color: #007BFF; color: white; border: none; transition: 0.3s; }
+  button:hover { background-color: #0056b3; }
+  .danger { background-color: #dc3545; color: white; }
+  .danger:hover { background-color: #a71d2a; }
+
+  .flex-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px; }
+  .flex-col { display: flex; flex-direction: column; }
+
+  .message.info { color: #dc3545; font-weight: bold; }
+  .mt-10 { margin-top: 10px; }
+  .mt-15 { margin-top: 15px; }
+
+  @media (max-width: 768px) {
+    .flex-row { flex-direction: column; }
+  }
+
+  /* =========================
+     MESSAGE BANNER
+  ========================= */
+  #messageBanner {
+    position: fixed; top: -60px; left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px; border-radius: 5px;
+    font-size: 1rem; z-index: 9999; color: #fff;
+    min-width: 250px; text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: top 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+  }
+  #messageBanner.show { top: 10px; opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- MESSAGE BANNER -->
+<div id="messageBanner"></div>
+
+<header>
+  <h1>Admin Dashboard</h1>
+  <p>Manage students, teachers, results, and grading</p>
+</header>
+
+<!-- =========================
+     PENDING STUDENTS
+========================= -->
+<section>
+  <h2>Pending Student Approvals</h2>
+  <table id="pendingStudentsTable">
+    <thead>
+      <tr>
+        <th>Admission Number</th>
+        <th>Student Name</th>
+        <th>Grade</th>
+        <th>Parent Phone</th>
+        <th>Registered By</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="6">No pending students found</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- =========================
+     TEACHERS MANAGEMENT
+========================= -->
+<section>
+  <h2>Teachers</h2>
+  <table id="teachersTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Grade</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="5">No teachers found</td></tr>
+    </tbody>
+  </table>
+
+  <div class="flex-row mt-10">
+    <input type="text" id="teacherName" placeholder="Teacher Name">
+    <input type="email" id="teacherEmail" placeholder="Teacher Email">
+    <div class="flex-col">
+      <label for="teacherGrade">Grade</label>
+      <select id="teacherGrade">
+        <option value="">Select Grade</option>
+        <option value="1">Grade 1</option>
+        <option value="2">Grade 2</option>
+        <option value="3">Grade 3</option>
+        <option value="4">Grade 4</option>
+        <option value="5">Grade 5</option>
+        <option value="6">Grade 6</option>
+        <option value="7">Grade 7</option>
+        <option value="8">Grade 8</option>
+        <option value="9">Grade 9</option>
+      </select>
+    </div>
+    <input type="password" id="teacherPassword" placeholder="Set Password">
+    <button id="addTeacherBtn">Add Teacher</button>
+  </div>
+</section>
+
+<!-- =========================
+     ADMIN MANAGEMENT
+========================= -->
+<section>
+  <h2>Admin Management</h2>
+  <div class="flex-row">
+    <input type="text" id="adminName" placeholder="Admin Name">
+    <input type="email" id="adminEmail" placeholder="Admin Email">
+    <input type="password" id="adminPassword" placeholder="Set Password">
+    <button id="addAdminBtn">Add Admin</button>
+  </div>
+</section>
+
+<!-- =========================
+     STUDENT MANAGEMENT
+========================= -->
+<section>
+  <h2>Add Student</h2>
+  <div class="flex-row">
+    <input type="text" id="studentName" placeholder="Student Name">
+    <input type="text" id="studentAdmNo" placeholder="Admission Number">
+    <div class="flex-col">
+      <label for="studentGrade">Grade</label>
+      <select id="studentGrade">
+        <option value="">Select Grade</option>
+        <option value="1">Grade 1</option>
+        <option value="2">Grade 2</option>
+        <option value="3">Grade 3</option>
+        <option value="4">Grade 4</option>
+        <option value="5">Grade 5</option>
+        <option value="6">Grade 6</option>
+        <option value="7">Grade 7</option>
+        <option value="8">Grade 8</option>
+        <option value="9">Grade 9</option>
+      </select>
+    </div>
+    <input type="text" id="parentPhone" placeholder="Parent Phone Number">
+    <button id="addStudentBtn">Add Student</button>
+  </div>
+
+  <div class="flex-row mt-10">
+    <label for="promoteGrade">Select Grade to Promote:</label>
+    <select id="promoteGrade">
+      <option value="">Select Grade</option>
+      <option value="1">Grade 1</option>
+      <option value="2">Grade 2</option>
+      <option value="3">Grade 3</option>
+      <option value="4">Grade 4</option>
+      <option value="5">Grade 5</option>
+      <option value="6">Grade 6</option>
+      <option value="7">Grade 7</option>
+      <option value="8">Grade 8</option>
+      <option value="9">Grade 9</option>
+    </select>
+    <button id="promoteBtn">Promote Grade</button>
+  </div>
+
+  <div class="flex-row mt-15">
+    <input type="text" id="removeAdmNo" placeholder="Admission Number to Remove">
+    <button id="removeStudentBtn" class="danger">Remove Student ⚠️</button>
+  </div>
+  <p class="message info">⚠️ Removing a student is permanent. All results for this student will also be deleted.</p>
+</section>
+
+<!-- =========================
+     RESULTS PORTAL
+========================= -->
+<section>
+  <h2>Results Portal</h2>
+  <button id="lockResultsBtn">Lock / Unlock Results Portal</button>
+</section>
+
+<!-- =========================
+     GRADE ANALYSIS
+========================= -->
+<section>
+  <h2>Grade Analysis / Ranking</h2>
+  <div class="flex-row">
+    <div class="flex-col">
+      <label for="analysisGrade">Grade</label>
+      <select id="analysisGrade">
+        <option value="">Select Grade</option>
+        <option value="1">Grade 1</option>
+        <option value="2">Grade 2</option>
+        <option value="3">Grade 3</option>
+        <option value="4">Grade 4</option>
+        <option value="5">Grade 5</option>
+        <option value="6">Grade 6</option>
+        <option value="7">Grade 7</option>
+        <option value="8">Grade 8</option>
+        <option value="9">Grade 9</option>
+      </select>
+    </div>
+
+    <div class="flex-col">
+      <label for="analysisTerm">Term</label>
+      <select id="analysisTerm">
+        <option value="">Select Term</option>
+        <option value="1">Term 1</option>
+        <option value="2">Term 2</option>
+        <option value="3">Term 3</option>
+      </select>
+    </div>
+
+    <input type="number" id="analysisYear" placeholder="Year e.g. 2026">
+    <button id="loadAnalysisBtn">Load Analysis</button>
+  </div>
+
+  <table id="analysisTable">
+    <thead>
+      <tr>
+        <th>Admission Number</th>
+        <th>Student Name</th>
+        <th>Grade</th>
+        <th>Total Marks</th>
+        <th>Mean Points</th>
+        <th>Ranking</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="6">No results found</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<script type="module" src="../js/admin.js"></script>
+</body>
+</html>
